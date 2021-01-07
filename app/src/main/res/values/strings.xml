@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Timetable</string>
+    <string name="title_activity_main_navigation">MainActivity</string>
+    <string name="title_home">我的</string>
+    <string name="title_dashboard">课程</string>
+    <string name="title_notifications">事务</string>
 </resources>

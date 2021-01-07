@@ -1,34 +1,56 @@
-package com.example.timetable
+package com.example.timetable.ui.home
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.timetable.R
+import com.example.timetable.Subject
+import com.example.timetable.SubjectRepertory
 import com.zhuangfei.timetable.TimetableView
 
+class HomeFragment : Fragment() {
 
-class MainActivity : AppCompatActivity(){
+    private lateinit var homeViewModel: HomeViewModel
+
     private var mTimetableView: TimetableView? = null
     private var mySubjects:List<Subject>? = null
     private var alertDialog: AlertDialog? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        initTimetableView()
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        homeViewModel =
+            ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        //获取控件
+        mTimetableView = root.findViewById(R.id.id_timetableView)
+        mTimetableView!!.maxSlideItem(11).itemHeight(65)
+        mTimetableView!!.showView()
         requestData()
+//        val textView: TextView = root.findViewById(R.id.text_home)
+//        homeViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
+        return root
     }
 
     /**
      * 2秒后刷新界面，模拟网络请求
      */
     private fun requestData() {
-        alertDialog = AlertDialog.Builder(this)
+        alertDialog = AlertDialog.Builder(this.activity)
             .setMessage("模拟请求网络中..")
             .setTitle("Tips").create()
         alertDialog?.show()
@@ -51,16 +73,4 @@ class MainActivity : AppCompatActivity(){
             mTimetableView!!.source(mySubjects).showView()
         }
     }
-
-    private fun initTimetableView() {
-
-        //获取控件
-        mTimetableView = findViewById(R.id.id_timetableView)
-        mTimetableView!!.maxSlideItem(11).itemHeight(65)
-        mTimetableView!!.showView()
-    }
-
-
-
-
 }
