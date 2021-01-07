@@ -11,6 +11,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.timetable.PollingUtils.startPollingService
+import com.example.timetable.PollingUtils.stopPollingService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -36,6 +38,19 @@ class MainNavigation : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController!!, appBarConfiguration!!)
         navView!!.setupWithNavController(navController!!)
+
+        //Start polling service
+
+        //Start polling service
+        println("Start polling service...")
+        startPollingService(this, 1, PollingService::class.java, PollingService.ACTION)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //Stop polling service
+        println("Stop polling service...")
+        stopPollingService(this, PollingService::class.java, PollingService.ACTION)
     }
 
     override fun onSupportNavigateUp(): Boolean {
