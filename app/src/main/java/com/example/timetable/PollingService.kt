@@ -4,65 +4,49 @@ package com.example.timetable
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.IBinder
-import android.os.SystemClock
+import android.os.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class PollingService : Service() {
+    private final val ERROR :Int= 2
+    private final val JSONSUCCESS :Int= 1
     private val NOTIFICATION_ID: Int = 0
     private val CHANNEL_CODE: String? = "1"
-    private var mNotification: Notification? = null
     private var mNotificationChannel: NotificationChannel? = null
     private var mManager: NotificationManager? = null
+
+    //消息内容
+    private var title:String? = "消息";
+    private var bigText:String? = "你有作业需要做";
+
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
-        initNotifiManager()
+        //初始化通知栏配置
+        createNotificationChannel()
     }
 
     override fun onStart(intent: Intent?, startId: Int) {
         PollingThread().start()
     }
 
-    //初始化通知栏配置
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun initNotifiManager() {
-        createNotificationChannel()
-//        mManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-//        mNotificationChannel?.let { mManager!!.createNotificationChannel(it) }
-    }
 
-    //弹出Notification
-    @SuppressLint("WrongConstant")
-    private fun showNotification() {
-        mNotification!!.`when` = System.currentTimeMillis()
-        //Navigator to the new activity when click the notification title
-        val intent = Intent(this, MainNavigation::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent,
-            Intent.FLAG_ACTIVITY_NEW_TASK
-        )
-        println("开始提醒")
-        mNotification = Notification.Builder(this!!)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("通知")
-            .setContentText("您有消息，请及时查看！")
-            .setContentIntent(pendingIntent)
-            .setWhen(System.currentTimeMillis())
-            .setAutoCancel(true)
-            .build()
-        mManager!!.notify(0, mNotification)
+    override fun onDestroy() {
+        super.onDestroy()
+        println("Service:onDestroy")
     }
 
     /**
@@ -72,22 +56,85 @@ class PollingService : Service() {
     var count = 0
 
     internal inner class PollingThread : Thread() {
+        @RequiresApi(Build.VERSION_CODES.KITKAT)
         override fun run() {
-            println("Polling...")
-            count++
-//            showNotification()
-            createNotification()
-            val triggerAtTime = SystemClock.elapsedRealtime()
-            println("时间为"+triggerAtTime)
-            println("New message!")
+            //网络请求是否有推送信息
+            getMessage()
 
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        println("Service:onDestroy")
+
+    private val handler: Handler = object : Handler(Looper.getMainLooper()){
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            when(msg?.what){
+                JSONSUCCESS->{
+                    //analysisJSONData
+                    analysisJSONData(msg.obj.toString())
+                    //逻辑处理生成推送消息title、bigText
+                    if(title != null && bigText !=null){
+                        println("Polling...")
+                        count++
+                        //推送到通知栏
+                        createNotification()
+                        val triggerAtTime = SystemClock.elapsedRealtime()
+                        println("次数为"+count+"时间为"+triggerAtTime)
+                        println("New message!")
+
+                    }
+                }
+                else->
+                    return
+            }
+
+        }
     }
+
+    private fun analysisJSONData(string: String){
+        //下面写：处理返回JSON字符串数据，并且保存到全局变量title、bigTitle
+        //do logic
+
+        title = "消息2"
+        bigText = "内容"
+    }
+
+    //获取推送信息
+    private fun getMessage(){
+
+            try {
+                val path = "https://api.thecatapi.com/v1/images/search?limit=3&page=100"
+                val url: URL = URL(path)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod ="GET"
+                connection.connectTimeout=5000
+                if(connection.responseCode == 200){
+                    var inStream = connection.inputStream
+                    var reader = inStream.bufferedReader()
+                    val response = StringBuilder()
+                    while (true){
+                        val line = reader.readLine()?:break
+                        response.append(line)
+                    }
+                    var msg: Message = Message()
+                    msg.what = JSONSUCCESS
+                    msg.obj = response
+                    handler.sendMessage(msg)
+                }
+                else{
+                    var msg :Message = Message()
+                    msg.what = ERROR
+                    handler.sendMessage(msg)
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
+                var msg = Message()
+                msg.what = ERROR
+                handler.sendMessage(msg)
+            }
+
+    }
+
 
     @SuppressLint("WrongConstant")
     fun createNotification() {
@@ -103,11 +150,11 @@ class PollingService : Service() {
         val builder = CHANNEL_CODE?.let {
             NotificationCompat.Builder(application, it)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("消息标题"+count)
-                .setContentText("消息内容")
+                .setContentTitle(title!!)
+                .setContentText(bigText!!)
                 .setStyle(
                     NotificationCompat.BigTextStyle()
-                        .bigText("long notification content")
+                        .bigText(bigText!!)
                 )
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 // Set the intent that will fire when the user taps the notification

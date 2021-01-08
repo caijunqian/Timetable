@@ -1,8 +1,10 @@
 package com.example.timetable
 
 
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -22,6 +24,7 @@ class MainNavigation : AppCompatActivity() {
     private var navController: NavController? = null
     private var appBarConfiguration:AppBarConfiguration? = null
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_navigation)
@@ -39,7 +42,6 @@ class MainNavigation : AppCompatActivity() {
         setupActionBarWithNavController(navController!!, appBarConfiguration!!)
         navView!!.setupWithNavController(navController!!)
 
-        //Start polling service
 
         //Start polling service
         println("Start polling service...")
@@ -49,8 +51,8 @@ class MainNavigation : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         //Stop polling service
-        println("Stop polling service...")
-        stopPollingService(this, PollingService::class.java, PollingService.ACTION)
+//        println("Stop polling service...")
+//        stopPollingService(this, PollingService::class.java, PollingService.ACTION)
     }
 
     override fun onSupportNavigateUp(): Boolean {
