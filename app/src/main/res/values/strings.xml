@@ -4,4 +4,19 @@
     <string name="title_home">我的</string>
     <string name="title_dashboard">课程</string>
     <string name="title_notifications">事务</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="loginTvNum">学号：</string>
+    <string name="loginTvPwd">密码：</string>
+    <string name="hintNum">请输入学号</string>
+    <string name="hintPwd">请输入密码</string>
+    <string name="login">登录</string>
+    <string name="avator">avator</string>
 </resources>
