@@ -19,4 +19,11 @@
     <string name="hintPwd">请输入密码</string>
     <string name="login">登录</string>
     <string name="avator">avator</string>
+    <string name="homeNum">学号：</string>
+    <string name="homeName">姓名：</string>
+    <string name="homeGrade">年级：</string>
+    <string name="homeClass">班级：</string>
+    <string name="homeUpdatePwd">修改密码</string>
+    <string name="homeLogout">退出登录</string>
+    <string name="homeavatar">homeAvatar</string>
 </resources>

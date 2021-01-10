@@ -44,7 +44,10 @@ class Login : AppCompatActivity() {
                         response.let { it ->
                             it.body()?.let {
                                 if (it.code == 200) {
-                                    startActivity(Intent(this@Login, MainNavigation::class.java))
+                                    val intent = Intent(this@Login, MainNavigation::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(intent)
                                     Log.d(TAG, "onResponse:${it.data}")
                                     GlobalMsg.info= it.data!!   //登录后把登录信息存入全局变量
                                 } else if (it.code == 400) {

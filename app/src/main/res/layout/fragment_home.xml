@@ -1,94 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:orientation="vertical"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.home.HomeFragment"
+    android:focusable="true">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:layout_weight="30"
-            android:text="学生编号"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_weight="70"
-            android:hint="无"
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:layout_weight="20"
-            android:text="学号"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_weight="80"
-            android:hint="无"
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:layout_weight="20"
-            android:text="姓名"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
 
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_weight="80"
-            android:hint="无"
-            android:layout_gravity="center"/>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/homeavatar"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:srcCompat="@drawable/avatar"
+        tools:src="@tools:sample/avatars" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/homeTvName"
+        android:layout_width="226dp"
+        android:layout_height="35dp"
+        android:text="@string/homeName"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/homeTvGrade"
+        app:layout_constraintEnd_toEndOf="@+id/homeTvGrade"
+        app:layout_constraintStart_toStartOf="@+id/homeTvGrade"
+        app:layout_constraintTop_toBottomOf="@+id/homeTvNum" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="16sp"
-            android:text="修改密码"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/homeTvClass"
+        android:layout_width="226dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/homeClass"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/homeTvNum"
+        android:layout_width="226dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/homeNum"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/homeTvName"
+        app:layout_constraintStart_toStartOf="@+id/homeTvName"
+        app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
+    <TextView
+        android:id="@+id/homeTvGrade"
+        android:layout_width="226dp"
+        android:layout_height="35dp"
+        android:text="@string/homeGrade"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/homeTvClass"
+        app:layout_constraintEnd_toEndOf="@+id/homeTvClass"
+        app:layout_constraintStart_toStartOf="@+id/homeTvClass"
+        app:layout_constraintTop_toBottomOf="@+id/homeTvName" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/homeBtnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/homeUpdatePwd"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+        app:layout_constraintEnd_toStartOf="@+id/homeBtnLogout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline6" />
+
+    <Button
+        android:id="@+id/homeBtnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/homeLogout"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/homeBtnUpdate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/homeBtnUpdate"
+        app:layout_constraintTop_toTopOf="@+id/homeBtnUpdate" />
+</androidx.constraintlayout.widget.ConstraintLayout>
