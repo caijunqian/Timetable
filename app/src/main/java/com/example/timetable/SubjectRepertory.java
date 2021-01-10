@@ -22,7 +22,7 @@ public class SubjectRepertory {
                 "      \"userId\": 1,\n" +
                 "      \"termId\": 1,\n" +
                 "      \"courseName\": \"软件需求分析\",\n" +
-                "      \"startWeek\": 1,\n" +
+                "      \"startWeek\": 3,\n" +
                 "      \"endWeek\": 18,\n" +
                 "      \"courseTimeId\": 1,\n" +
                 "      \"weekday\": 2,\n" +
@@ -55,7 +55,7 @@ public class SubjectRepertory {
                 "      \"userId\": 1,\n" +
                 "      \"termId\": 1,\n" +
                 "      \"courseName\": \"软件需求分析\",\n" +
-                "      \"startWeek\": 1,\n" +
+                "      \"startWeek\": 4,\n" +
                 "      \"endWeek\": 18,\n" +
                 "      \"courseTimeId\": 1,\n" +
                 "      \"weekday\": 2,\n" +

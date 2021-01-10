@@ -1,9 +1,5 @@
 package com.example.timetable;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import com.zhuangfei.timetable.model.Schedule;
 import com.zhuangfei.timetable.model.ScheduleEnable;
 
@@ -11,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Subject implements ScheduleEnable {
-    private Integer subjectId;
+    private Integer courseId;
     private Integer userId;
     private Integer termId;
     private String courseName;
@@ -26,8 +22,8 @@ public class Subject implements ScheduleEnable {
     public Subject() {
     }
 
-    public Subject(Integer subjectId, Integer userId, Integer termId, String courseName, Integer startWeek, Integer endWeek, Integer courseTimeId, Integer weekday, String classroom, Integer startLesson, Integer endLesson) {
-        this.subjectId = subjectId;
+    public Subject(Integer courseId, Integer userId, Integer termId, String courseName, Integer startWeek, Integer endWeek, Integer courseTimeId, Integer weekday, String classroom, Integer startLesson, Integer endLesson) {
+        this.courseId = courseId;
         this.userId = userId;
         this.termId = termId;
         this.courseName = courseName;
@@ -40,8 +36,8 @@ public class Subject implements ScheduleEnable {
         this.endLesson = endLesson;
     }
 
-    public Integer getSubjectId() {
-        return subjectId;
+    public Integer getCourseId() {
+        return courseId;
     }
 
     public Integer getUserId() {
@@ -84,8 +80,8 @@ public class Subject implements ScheduleEnable {
         return endLesson;
     }
 
-    public void setSubjectId(Integer subjectId) {
-        this.subjectId = subjectId;
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     public void setUserId(Integer userId) {
@@ -132,7 +128,7 @@ public class Subject implements ScheduleEnable {
     @Override
     public String toString() {
         return "Subject{" +
-                "subjectId=" + subjectId +
+                "courseId=" + courseId +
                 ", userId=" + userId +
                 ", termId=" + termId +
                 ", courseName='" + courseName + '\'' +
