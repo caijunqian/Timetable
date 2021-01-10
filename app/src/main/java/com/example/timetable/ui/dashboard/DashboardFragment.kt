@@ -77,7 +77,14 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                                 curWeekBtn!!.text = "当前"+currWeekNum+"周"
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mTimetableView!!.source(mySubjects).showView()
-                            } else {
+                            } else if(it.code == 204){
+                                currWeekNum = it.msg
+                                curWeekBtn!!.text = "当前"+currWeekNum+"周"
+                                mySubjects = listOf()
+                                if (alertDialog != null) alertDialog!!.hide()
+                                mTimetableView!!.source(mySubjects).showView()
+                            }else {
+                                Log.d("jj",it.toString())
                                 Toast.makeText(activity, "网络请求失败，请稍后再试", Toast.LENGTH_LONG)
                                     .show()
 
