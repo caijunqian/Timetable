@@ -52,16 +52,19 @@ class Login : AppCompatActivity() {
                                     GlobalMsg.info= it.data!!   //登录后把登录信息存入全局变量
                                 } else if (it.code == 400) {
                                     Toast.makeText(this@Login, "登录密码错误", Toast.LENGTH_LONG).show()
+
                                 } else {
                                     Toast.makeText(this@Login, "网络请求失败，请稍后再试", Toast.LENGTH_LONG)
                                         .show()
+
                                 }
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<InfoBean>, t: Throwable) {
-                        Toast.makeText(this@Login, "网络请求失败，请稍后再试", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@Login, "网络请求失败，请稍后再试！", Toast.LENGTH_LONG).show()
+
                     }
                 })
         }

@@ -5,9 +5,7 @@
     <string name="title_dashboard">课程</string>
     <string name="title_notifications">事务</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
@@ -26,4 +24,5 @@
     <string name="homeUpdatePwd">修改密码</string>
     <string name="homeLogout">退出登录</string>
     <string name="homeavatar">homeAvatar</string>
+
 </resources>

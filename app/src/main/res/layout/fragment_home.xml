@@ -11,11 +11,11 @@
     android:focusable="true">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+    android:id="@+id/guideline7"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.9" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"

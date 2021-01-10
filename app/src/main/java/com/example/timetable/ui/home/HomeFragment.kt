@@ -19,6 +19,7 @@ import com.example.timetable.R
 import com.example.timetable.Subject
 import com.example.timetable.SubjectRepertory
 import com.example.timetable.ui.Login
+import com.example.timetable.ui.PasswordActivity
 import com.zhuangfei.timetable.TimetableView
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -68,11 +69,12 @@ class HomeFragment : Fragment() {
         }
         btnUpdate.setOnClickListener {
             activity?.let {
-//                val intent = Intent(it, Login::class.java)
-//                it.startActivity(intent)
+                val intent = Intent(it, PasswordActivity::class.java)
+                it.startActivity(intent)
                 print("跳转到修改密码的fragment")
             }
         }
     }
+
 
 }
