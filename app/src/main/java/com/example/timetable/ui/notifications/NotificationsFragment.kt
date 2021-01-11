@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -48,6 +49,16 @@ class NotificationsFragment : Fragment() {
         //先放一个空的adapter，因为网络请求是异步，不然绑定不了adaptor
         adapter?.notifications = mutableListOf()
         adapter?.let { getNotifications(it,0) }
+
+        //为按钮设置监听
+        val btnTodo = view.findViewById<Button>(R.id.button2)
+        val btnDone = view.findViewById<Button>(R.id.button3)
+        btnTodo.setOnClickListener {
+            adapter?.let { getNotifications(it,0) }
+        }
+        btnDone.setOnClickListener {
+            adapter?.let { getNotifications(it,1) }
+        }
     }
     override fun onStart() {
         super.onStart()

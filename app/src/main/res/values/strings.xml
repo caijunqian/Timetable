@@ -24,5 +24,7 @@
     <string name="homeUpdatePwd">修改密码</string>
     <string name="homeLogout">退出登录</string>
     <string name="homeavatar">homeAvatar</string>
+    <string name="notFinished">待完成</string>
+    <string name="notRemind">已忽略</string>
 
 </resources>
