@@ -26,5 +26,10 @@
     <string name="homeavatar">homeAvatar</string>
     <string name="notFinished">待完成</string>
     <string name="notRemind">已忽略</string>
+    <string name="addNotice">添加事件提醒</string>
+    <string name="clickHint">截止日期</string>
+    <string name="noticeName">事件名：</string>
+    <string name="noticeDetail">详情：</string>
+    <string name="submit">提交</string>
 
 </resources>

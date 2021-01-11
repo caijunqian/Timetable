@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.example.timetable.GlobalMsg
 import com.example.timetable.MainNavigation
 import com.example.timetable.R
 import com.example.timetable.httpReq.*
+import com.example.timetable.ui.PasswordActivity
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,18 +55,26 @@ class NotificationsFragment : Fragment() {
         //为按钮设置监听
         val btnTodo = view.findViewById<Button>(R.id.button2)
         val btnDone = view.findViewById<Button>(R.id.button3)
+        val addImageView = view.findViewById<ImageView>(R.id.imageViewAdd)
         btnTodo.setOnClickListener {
             adapter?.let { getNotifications(it,0) }
         }
         btnDone.setOnClickListener {
             adapter?.let { getNotifications(it,1) }
         }
+        addImageView.setOnClickListener {
+            //跳转到activity进行添加
+            activity.let {
+                val intent = Intent(it, AddNotice::class.java)
+                it?.startActivity(intent)
+            }
+        }
     }
     override fun onStart() {
         super.onStart()
         adapter?.let { getNotifications(it,0) }
     }
-    private fun getNotifications(adapter: NotificationsAdapter,isFinished:Int):Unit{
+    fun getNotifications(adapter: NotificationsAdapter,isFinished:Int):Unit{
         val api = RetrofitUtils.getRetrofit().create(ItemApi::class.java)
         api.selectItems(GlobalMsg.info.userId!!,isFinished)
             .enqueue(object : Callback<ItemBean> {

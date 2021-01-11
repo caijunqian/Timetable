@@ -60,7 +60,7 @@ class NotificationsAdapter : RecyclerView.Adapter<NotificationsAdapter.MyViewHol
             if(notice.canDelete!=1) holder.imageView!!.setImageBitmap(drawable.toBitmap())
             else{ //可以删除，设置长按监听
                 holder.itemView.setOnLongClickListener {
-                    AlertDialog.Builder(holder.itemView.context).setTitle("提示").setMessage("您确定删除该记录吗？")
+                    AlertDialog.Builder(holder.itemView.context).setTitle("提示").setMessage("您确定删除该事件吗？")
                         .setPositiveButton("确定", DialogInterface.OnClickListener { _, _ ->
                             if (notice.itemId != null) {
                                 //todo 发网络请求进行删除
@@ -75,8 +75,12 @@ class NotificationsAdapter : RecyclerView.Adapter<NotificationsAdapter.MyViewHol
             //设置点击查看详情监听
             holder.itemView.setOnClickListener {
                 AlertDialog.Builder(holder.itemView.context).setTitle(notice.name).setMessage(notice.detail)
-                    .setPositiveButton("确定", DialogInterface.OnClickListener { _, _ ->
-                    }).show()
+                    .setPositiveButton("返回", DialogInterface.OnClickListener { _, _ ->
+                    })
+                    .setNegativeButton("忽略") { _, _ ->
+                        Log.d("TAG", "onBindViewHolder: 忽略")
+                        //TODO 设置不提醒
+                    }.show()
             }
         }
     }
