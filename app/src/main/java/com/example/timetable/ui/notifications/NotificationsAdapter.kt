@@ -85,12 +85,23 @@ class NotificationsAdapter : RecyclerView.Adapter<NotificationsAdapter.MyViewHol
             }
             //设置点击查看详情监听
             holder.itemView.setOnClickListener {
+                var hintText:String = "忽略提醒"
+                if(notice.isFinished==1){
+                    hintText="取消忽略"
+                }
                 AlertDialog.Builder(holder.itemView.context).setTitle(notice.name).setMessage(notice.detail)
                     .setPositiveButton("返回", DialogInterface.OnClickListener { _, _ ->
                     })
-                    .setNegativeButton("忽略提醒") { _, _ ->
-                        Log.d("TAG", "onBindViewHolder: 忽略提醒")
-                        //TODO 设置不提醒
+                    .setNegativeButton(hintText) { _, _ ->
+                        //设置是否忽略提醒
+                        if (notice.itemId != null) {
+                            //发网络请求并更新视图
+                            notice.isFinished?.let { it1 ->
+                                NotificationsFragment.mContext.markFinished(notice.itemId!!,
+                                    it1
+                                )
+                            }
+                        }
                     }.show()
             }
         }

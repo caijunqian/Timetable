@@ -19,4 +19,7 @@ interface ItemApi {
     @FormUrlEncoded
     fun insertItem(@Field("userId") userId:Int,@Field("name")name:String,@Field("detail")detail:String
                    ,@Field("endTime")endTime:String,@Field("canDelete")canDelete:Int):Call<ItemBean>
+
+    @PUT("markFinished/{itemId}/{isFinished}")
+    fun markFinished(@Path("itemId") itemId:Int,@Path("isFinished") isFinished:Int): Call<ItemBean>
 }

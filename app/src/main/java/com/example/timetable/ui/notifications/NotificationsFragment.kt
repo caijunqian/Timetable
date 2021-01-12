@@ -125,4 +125,26 @@ class NotificationsFragment : Fragment() {
                 }
             })
     }
+
+    fun markFinished(itemId:Int,isFinished: Int):Unit{
+        val api = RetrofitUtils.getRetrofit().create(ItemApi::class.java)
+        api.markFinished(itemId,if(isFinished==1)0 else 1)
+            .enqueue(object : Callback<ItemBean> {
+                override fun onResponse(call: Call<ItemBean>, response: Response<ItemBean>) {
+                    response.let { it ->
+                        it.body()?.let {
+                            if (it.code == 200) {
+                                Toast.makeText(context, "操作成功", Toast.LENGTH_LONG).show()
+                                getNotifications(isFinished) //成功后刷新视图
+                            } else {
+                                Toast.makeText(context, "网络请求失败，请稍后再试", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<ItemBean>, t: Throwable) {
+                    Toast.makeText(context, "网络请求失败，请稍后再试！", Toast.LENGTH_LONG).show()
+                }
+            })
+    }
 }
