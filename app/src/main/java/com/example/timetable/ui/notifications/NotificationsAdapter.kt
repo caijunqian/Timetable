@@ -64,6 +64,10 @@ class NotificationsAdapter : RecyclerView.Adapter<NotificationsAdapter.MyViewHol
             val deleteDrawable = holder.imageView!!.resources.getDrawable(R.drawable.ic_baseline_delete_24)
             if(notice.canDelete!=1) {
                 holder.imageView!!.setImageBitmap(warnDrawable.toBitmap())
+                holder.itemView.setOnLongClickListener {
+//                    Toast.makeText(it.context, "该通知无法删除", Toast.LENGTH_LONG).show()
+                    return@setOnLongClickListener true
+                }
             }
             else{ //可以删除，设置长按监听
                 holder.imageView!!.setImageBitmap(deleteDrawable.toBitmap())
