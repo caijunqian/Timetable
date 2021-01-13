@@ -1,6 +1,9 @@
 package com.example.timetable
 
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +23,8 @@ import com.example.timetable.PollingUtils.startPollingService
 import com.example.timetable.work.NotificationWorker
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.concurrent.TimeUnit
-
+const val CHANNEL_ID="my notification channel Id 1" //CHANNEL_ID不能在普通类里创建
+const val NOTIFICATION_ID_OF_ITEM=28 //CHANNEL_ID不能在普通类里创建
 class MainNavigation : AppCompatActivity() {
 
     private var navView: BottomNavigationView? = null
@@ -54,30 +58,7 @@ class MainNavigation : AppCompatActivity() {
         startPollingService(this, 1, PollingService::class.java, PollingService.ACTION)
 
         /***Notifications******/
-        val constrain = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setConstraints(constrain)
-//            .setInputData(workDataOf("KEY_A" to "valueA"))
-            .build()
-        val periodicWorkRequest =
-            PeriodicWorkRequestBuilder<NotificationWorker>(15,TimeUnit.MINUTES,5,TimeUnit.MINUTES)
-                .build()
-        workManager.enqueue(periodicWorkRequest)
-        workManager.enqueue(oneTimeWorkRequest)
-
-
-//        workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id).observe(this, Observer {
-//            if (it.state == WorkInfo.State.SUCCEEDED) {
-//                Log.d("workNotice", "onCreate:oneTimeWorkRequest  ${it.outputData.getString("KEY_B")}")
-//            }
-//        })
-//        workManager.getWorkInfoByIdLiveData(periodicWorkRequest.id).observe(this, Observer {
-//            if (it.state == WorkInfo.State.SUCCEEDED) {
-//                Log.d("workNotice", "onCreate: periodicWorkRequest ${it.outputData.getString("KEY_B")}")
-//            }
-//        })
+        makeNoticeWorker()
         /**********************/
     }
 
@@ -99,5 +80,37 @@ class MainNavigation : AppCompatActivity() {
         return (item?.let { NavigationUI.onNavDestinationSelected(it, navController) }!!
                 || super.onOptionsItemSelected(item))
     }
-
+    private fun makeNoticeWorker(){
+        createNotificationChannel() //创建channelId用于worker中创建通知
+        val constrain = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+            .setConstraints(constrain)
+            .build()
+        val periodicWorkRequest =
+            PeriodicWorkRequestBuilder<NotificationWorker>(15,TimeUnit.MINUTES)
+                .setConstraints(constrain)
+                .build()
+//        workManager.enqueue(periodicWorkRequest)
+        workManager.enqueue(periodicWorkRequest)
+//        workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id).observe(this, Observer {
+//            if (it.state == WorkInfo.State.SUCCEEDED) {
+//                Log.d("workNotice", "onCreate:oneTimeWorkRequest  ${it.outputData.getString("KEY_B")}")
+//            }
+//        })
+    }
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "my channel no.1"
+            val descriptionText = "my channel descriptionText no.1"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
