@@ -3,9 +3,11 @@ package com.example.timetable
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -13,10 +15,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.example.timetable.PollingUtils.startPollingService
-import com.example.timetable.PollingUtils.stopPollingService
+import com.example.timetable.work.NotificationWorker
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
+import java.util.concurrent.TimeUnit
 
 class MainNavigation : AppCompatActivity() {
 
@@ -24,6 +27,9 @@ class MainNavigation : AppCompatActivity() {
     private var navController: NavController? = null
     private var appBarConfiguration:AppBarConfiguration? = null
 
+    /***Notifications******/
+    private val workManager = WorkManager.getInstance(this)
+    /**********************/
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +52,33 @@ class MainNavigation : AppCompatActivity() {
         //Start polling service
         println("Start polling service...")
         startPollingService(this, 1, PollingService::class.java, PollingService.ACTION)
+
+        /***Notifications******/
+        val constrain = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+            .setConstraints(constrain)
+//            .setInputData(workDataOf("KEY_A" to "valueA"))
+            .build()
+        val periodicWorkRequest =
+            PeriodicWorkRequestBuilder<NotificationWorker>(15,TimeUnit.MINUTES,5,TimeUnit.MINUTES)
+                .build()
+        workManager.enqueue(periodicWorkRequest)
+        workManager.enqueue(oneTimeWorkRequest)
+
+
+//        workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id).observe(this, Observer {
+//            if (it.state == WorkInfo.State.SUCCEEDED) {
+//                Log.d("workNotice", "onCreate:oneTimeWorkRequest  ${it.outputData.getString("KEY_B")}")
+//            }
+//        })
+//        workManager.getWorkInfoByIdLiveData(periodicWorkRequest.id).observe(this, Observer {
+//            if (it.state == WorkInfo.State.SUCCEEDED) {
+//                Log.d("workNotice", "onCreate: periodicWorkRequest ${it.outputData.getString("KEY_B")}")
+//            }
+//        })
+        /**********************/
     }
 
     override fun onDestroy() {
