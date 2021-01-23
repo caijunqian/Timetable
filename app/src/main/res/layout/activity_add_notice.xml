@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.notifications.AddNotice">
+    tools:context=".ui.notifications.AddNotice"
+    android:background="@drawable/bg4">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline11"
@@ -124,6 +125,8 @@
         android:onClick="confirmAdd"
         android:text="@string/submit"
         android:textSize="18sp"
+        android:background="@drawable/button_curr_course"
+        android:textColor="@color/app_white"
         app:layout_constraintBottom_toTopOf="@+id/guideline17"
         app:layout_constraintEnd_toEndOf="@+id/tvDate"
         app:layout_constraintStart_toStartOf="@+id/tvDate"

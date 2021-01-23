@@ -10,12 +10,17 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.example.timetable.*
-import com.example.timetable.httpReq.*
+import com.example.timetable.GlobalMsg
+import com.example.timetable.R
+import com.example.timetable.Subject
+import com.example.timetable.httpReq.CourseApi
+import com.example.timetable.httpReq.CourseBean
+import com.example.timetable.httpReq.RetrofitUtils
 import com.zhuangfei.timetable.TimetableView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class DashboardFragment : Fragment(), View.OnClickListener {
 
@@ -45,8 +50,13 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
         //获取课程表控件
         mTimetableView = root.findViewById(R.id.id_timetableView)
-        mTimetableView!!.maxSlideItem(11).itemHeight(59)
-        mTimetableView!!.curWeek(1).showView()
+        //2、通过Resources获取
+
+        //2、通过Resources获取
+        val dm = resources.displayMetrics
+        val heigth = dm.heightPixels
+        mTimetableView!!.maxSlideItem(11)
+        mTimetableView!!.curWeek(currWeekNum!!).showView()
 
         //获取按钮控件
         preWeekBtn = root.findViewById(R.id.btn_preWeek)
@@ -74,17 +84,19 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 //                                Log.d("jj","当前周："+currWeekNum)
                                 mySubjects = it.data
 //                                Log.d("jj","网络课程"+mySubjects)
-                                curWeekBtn!!.text = "当前"+currWeekNum+"周"
+                                curWeekBtn!!.text = "当前" + currWeekNum + "周"
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mTimetableView!!.source(mySubjects).showView()
-                            } else if(it.code == 204){
+                            } else if (it.code == 204) {
                                 currWeekNum = it.msg!!.toInt()
-                                curWeekBtn!!.text = "当前"+currWeekNum+"周"
+                                curWeekBtn!!.text = "当前" + currWeekNum + "周"
                                 mySubjects = listOf()
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mTimetableView!!.source(mySubjects).showView()
-                            }else {
-                                Log.d("jj",it.toString())
+                                Toast.makeText(activity, "当前周没有课程", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Log.d("jj", it.toString())
                                 Toast.makeText(activity, "网络请求失败，请稍后再试", Toast.LENGTH_LONG)
                                     .show()
 
@@ -101,33 +113,33 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun getCourseInfoByWeekNum(weekNum:Int){
+    private fun getCourseInfoByWeekNum(weekNum: Int){
         //查询当前周的所有课程信息
         val api = RetrofitUtils.getRetrofit().create(CourseApi::class.java)
-        api.getCourseOfWeek(GlobalMsg.info.userId!!,weekNum)
+        api.getCourseOfWeek(GlobalMsg.info.userId!!, weekNum)
             .enqueue(object : Callback<CourseBean> {
                 override fun onResponse(call: Call<CourseBean>, response: Response<CourseBean>) {
                     response.let { it ->
                         it.body()?.let {
                             if (it.code == 200) {
-                                Log.d("jj",it.toString())
+                                Log.d("jj", it.toString())
                                 currWeekNum = it.msg!!.toInt()
 //                                Log.d("jj","查到周为："+it.msg)
                                 mySubjects = it.data
 //                                Log.d("jj","网络课程"+mySubjects)
-                                curWeekBtn!!.text = ""+currWeekNum+"周/回到当前"
+                                curWeekBtn!!.text = "" + currWeekNum + "周/回到当前"
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mTimetableView!!.source(mySubjects).showView()
-                            }else if(it.code == 204){
+                            } else if (it.code == 204) {
                                 currWeekNum = it.msg!!.toInt()
-                                curWeekBtn!!.text = ""+currWeekNum+"周/回到当前"
+                                curWeekBtn!!.text = "" + currWeekNum + "周/回到当前"
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mySubjects = listOf()
                                 mTimetableView!!.source(mySubjects).showView()
-
-                            }
-                            else {
-                                Log.d("jj",it.toString())
+                                Toast.makeText(activity, "当前周没有课程", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Log.d("jj", it.toString())
                                 Toast.makeText(activity, "网络请求失败，请稍后再试", Toast.LENGTH_LONG)
                                     .show()
 
@@ -169,26 +181,26 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v!!.id){
-            R.id.btn_preWeek->{
-                Log.d("jj","上一周")
-                selectWeekNum = currWeekNum!!-1
-                Log.d("jj",selectWeekNum.toString())
-                if(selectWeekNum!!<=0){
+            R.id.btn_preWeek -> {
+                Log.d("jj", "上一周")
+                selectWeekNum = currWeekNum!! - 1
+                Log.d("jj", selectWeekNum.toString())
+                if (selectWeekNum!! <= 0) {
                     selectWeekNum = 1
                     Toast.makeText(activity, "目前已经是第一周", Toast.LENGTH_LONG).show()
                     return
                 }
                 requestData(selectWeekNum!!)
             }
-            R.id.btn_nextWeek->{
-                Log.d("jj","下一周")
-                Log.d("jj",selectWeekNum.toString())
-                selectWeekNum = currWeekNum!!+1
+            R.id.btn_nextWeek -> {
+                Log.d("jj", "下一周")
+                Log.d("jj", selectWeekNum.toString())
+                selectWeekNum = currWeekNum!! + 1
                 requestData(selectWeekNum!!)
             }
-            R.id.btn_curWeek->{
-                Log.d("jj","本周")
-                Log.d("jj",currWeekNum.toString())
+            R.id.btn_curWeek -> {
+                Log.d("jj", "本周")
+                Log.d("jj", currWeekNum.toString())
                 getCurrCourseInfo()
             }
         }

@@ -31,7 +31,9 @@ class PollingService : Service() {
     private var mNotificationChannel: NotificationChannel? = null
     private var mManager: NotificationManager? = null
 
+    private var nextSubjects:List<Subject>? = null
     private var count:Int = 479
+
 
     //消息内容
     private var title:String? = "消息";
@@ -88,7 +90,8 @@ class PollingService : Service() {
                             if (it.code == 200) {
                                 Log.d("jj",it.toString())
                                 title = "课程提醒"
-                                bigText = it.data.toString()
+                                nextSubjects = it.data
+                                bigText = jointString()
                                 count++
                                 println("轮询次数为${count}")
                                 //实际每隔一分钟轮询一次，程序已每隔30次即30分钟推送
@@ -120,39 +123,16 @@ class PollingService : Service() {
                     return
                 }
             })
-//            try {
-//                val path = "http://8.129.29.84:8080/course/getCourseOfNextDay/1"
-//                val url: URL = URL(path)
-//                val connection = url.openConnection() as HttpURLConnection
-//                connection.requestMethod ="GET"
-//                connection.connectTimeout=5000
-//                if(connection.responseCode == 200){
-//                    var inStream = connection.inputStream
-//                    var reader = inStream.bufferedReader()
-//                    val response = StringBuilder()
-//                    while (true){
-//                        val line = reader.readLine()?:break
-//                        response.append(line)
-//                    }
-//                    var msg: Message = Message()
-//                    msg.what = JSONSUCCESS
-//                    msg.obj = response
-//                    handler.sendMessage(msg)
-//                }
-//                else{
-//                    var msg :Message = Message()
-//                    msg.what = ERROR
-//                    handler.sendMessage(msg)
-//                }
-//            }catch (e:Exception){
-//                e.printStackTrace()
-//                var msg = Message()
-//                msg.what = ERROR
-//                handler.sendMessage(msg)
-//            }
 
     }
 
+    fun jointString(): String {
+        var string:String = "明天课程有："
+        for(item:Subject in nextSubjects!!){
+            string += item.courseName
+        }
+        return string
+    }
 
     @SuppressLint("WrongConstant")
     fun createNotification() {
