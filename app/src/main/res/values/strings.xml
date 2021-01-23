@@ -31,5 +31,6 @@
     <string name="noticeName">事件名：</string>
     <string name="noticeDetail">详情：</string>
     <string name="submit">提交</string>
+    <string name="icon">icon</string>
 
 </resources>
