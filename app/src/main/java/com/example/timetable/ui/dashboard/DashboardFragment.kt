@@ -70,7 +70,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                         it.body()?.let {
                             if (it.code == 200) {
 //                                Log.d("jj",it.toString())
-                                currWeekNum = it.msg
+                                currWeekNum = it.msg!!.toInt()
 //                                Log.d("jj","当前周："+currWeekNum)
                                 mySubjects = it.data
 //                                Log.d("jj","网络课程"+mySubjects)
@@ -78,7 +78,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mTimetableView!!.source(mySubjects).showView()
                             } else if(it.code == 204){
-                                currWeekNum = it.msg
+                                currWeekNum = it.msg!!.toInt()
                                 curWeekBtn!!.text = "当前"+currWeekNum+"周"
                                 mySubjects = listOf()
                                 if (alertDialog != null) alertDialog!!.hide()
@@ -98,6 +98,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 
                 }
             })
+
     }
 
     private fun getCourseInfoByWeekNum(weekNum:Int){
@@ -110,7 +111,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                         it.body()?.let {
                             if (it.code == 200) {
                                 Log.d("jj",it.toString())
-                                currWeekNum = it.msg
+                                currWeekNum = it.msg!!.toInt()
 //                                Log.d("jj","查到周为："+it.msg)
                                 mySubjects = it.data
 //                                Log.d("jj","网络课程"+mySubjects)
@@ -118,9 +119,12 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                                 if (alertDialog != null) alertDialog!!.hide()
                                 mTimetableView!!.source(mySubjects).showView()
                             }else if(it.code == 204){
+                                currWeekNum = it.msg!!.toInt()
+                                curWeekBtn!!.text = ""+currWeekNum+"周/回到当前"
                                 if (alertDialog != null) alertDialog!!.hide()
-                                Toast.makeText(activity, "当前已经为最后一周！", Toast.LENGTH_LONG)
-                                    .show()
+                                mySubjects = listOf()
+                                mTimetableView!!.source(mySubjects).showView()
+
                             }
                             else {
                                 Log.d("jj",it.toString())

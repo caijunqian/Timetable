@@ -8,10 +8,17 @@ import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.timetable.httpReq.CourseApi
+import com.example.timetable.httpReq.CourseBean
+import com.example.timetable.httpReq.RetrofitUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -23,6 +30,8 @@ class PollingService : Service() {
     private val CHANNEL_CODE: String? = "1"
     private var mNotificationChannel: NotificationChannel? = null
     private var mManager: NotificationManager? = null
+
+    private var count:Int = 479
 
     //消息内容
     private var title:String? = "消息";
@@ -53,7 +62,6 @@ class PollingService : Service() {
      * Polling thread
      * 模拟向Server轮询的异步线程
      */
-    var count = 0
 
     internal inner class PollingThread : Thread() {
         @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -65,73 +73,83 @@ class PollingService : Service() {
     }
 
 
-    private val handler: Handler = object : Handler(Looper.getMainLooper()){
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            when(msg?.what){
-                JSONSUCCESS->{
-                    //analysisJSONData
-                    analysisJSONData(msg.obj.toString())
-                    //逻辑处理生成推送消息title、bigText
-                    if(title != null && bigText !=null){
-                        println("Polling...")
-                        count++
-                        //推送到通知栏
-                        createNotification()
-                        val triggerAtTime = SystemClock.elapsedRealtime()
-                        println("次数为"+count+"时间为"+triggerAtTime)
-                        println("New message!")
 
-                    }
-                }
-                else->
-                    return
-            }
 
-        }
-    }
 
-    private fun analysisJSONData(string: String){
-        //下面写：处理返回JSON字符串数据，并且保存到全局变量title、bigTitle
-        //do logic
-
-        title = "消息2"
-        bigText = "内容"
-    }
 
     //获取推送信息
     private fun getMessage(){
-
-            try {
-                val path = "https://api.thecatapi.com/v1/images/search?limit=3&page=100"
-                val url: URL = URL(path)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod ="GET"
-                connection.connectTimeout=5000
-                if(connection.responseCode == 200){
-                    var inStream = connection.inputStream
-                    var reader = inStream.bufferedReader()
-                    val response = StringBuilder()
-                    while (true){
-                        val line = reader.readLine()?:break
-                        response.append(line)
+        val api = RetrofitUtils.getRetrofit().create(CourseApi::class.java)
+        api.getCourseOfNextDay(GlobalMsg.info.userId!!)
+            .enqueue(object : Callback<CourseBean> {
+                override fun onResponse(call: Call<CourseBean>, response: Response<CourseBean>) {
+                    response.let { it ->
+                        it.body()?.let {
+                            if (it.code == 200) {
+                                Log.d("jj",it.toString())
+                                title = "课程提醒"
+                                bigText = it.data.toString()
+                                count++
+                                println("轮询次数为${count}")
+                                //实际每隔一分钟轮询一次，程序已每隔30次即30分钟推送
+                                if(count == 480) {
+                                    //推送到通知栏
+                                    createNotification()
+                                    count = 0
+                                }
+                            }else if(it.code == 204){
+                                title = "课程提醒"
+                                bigText = "明天没有课程"
+                                count++
+                                println("轮询次数为${count}")
+                                //实际每隔一分钟轮询一次，程序已每隔30次即30分钟推送
+                                if(count == 480){
+                                    //推送到通知栏
+                                    createNotification()
+                                    count=0
+                                }
+                            }
+                            else {
+                                return
+                            }
+                        }
                     }
-                    var msg: Message = Message()
-                    msg.what = JSONSUCCESS
-                    msg.obj = response
-                    handler.sendMessage(msg)
                 }
-                else{
-                    var msg :Message = Message()
-                    msg.what = ERROR
-                    handler.sendMessage(msg)
+
+                override fun onFailure(call: Call<CourseBean>, t: Throwable) {
+                    return
                 }
-            }catch (e:Exception){
-                e.printStackTrace()
-                var msg = Message()
-                msg.what = ERROR
-                handler.sendMessage(msg)
-            }
+            })
+//            try {
+//                val path = "http://8.129.29.84:8080/course/getCourseOfNextDay/1"
+//                val url: URL = URL(path)
+//                val connection = url.openConnection() as HttpURLConnection
+//                connection.requestMethod ="GET"
+//                connection.connectTimeout=5000
+//                if(connection.responseCode == 200){
+//                    var inStream = connection.inputStream
+//                    var reader = inStream.bufferedReader()
+//                    val response = StringBuilder()
+//                    while (true){
+//                        val line = reader.readLine()?:break
+//                        response.append(line)
+//                    }
+//                    var msg: Message = Message()
+//                    msg.what = JSONSUCCESS
+//                    msg.obj = response
+//                    handler.sendMessage(msg)
+//                }
+//                else{
+//                    var msg :Message = Message()
+//                    msg.what = ERROR
+//                    handler.sendMessage(msg)
+//                }
+//            }catch (e:Exception){
+//                e.printStackTrace()
+//                var msg = Message()
+//                msg.what = ERROR
+//                handler.sendMessage(msg)
+//            }
 
     }
 

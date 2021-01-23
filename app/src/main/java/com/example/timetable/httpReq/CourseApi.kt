@@ -11,4 +11,7 @@ interface CourseApi {
     //获取特定某一周的课表
     @GET("getCourseOfWeek/{userId}/{week}")
     fun getCourseOfWeek(@Path("userId") userId:Int,@Path("week")week:Int):Call<CourseBean>
+
+    @GET("getCourseOfNextDay/{userId}")
+    fun getCourseOfNextDay(@Path("userId") userId:Int):Call<CourseBean>
 }

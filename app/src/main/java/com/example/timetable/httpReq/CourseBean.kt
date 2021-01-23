@@ -9,7 +9,7 @@ data class CourseBean(
     @SerializedName("data")
     var `data`: List<Subject>?,
     @SerializedName("msg")
-    var msg: Int?
+    var msg: String?
 )
 //{
 //    data class Data(
